@@ -1,0 +1,115 @@
+# Depend packages
+@_gRPC_FIND_ZLIB@
+@_gRPC_FIND_PROTOBUF@
+@_gRPC_FIND_SSL@
+@_gRPC_FIND_CARES@
+
+if(BUILD_SHARED_LIBS)
+  set(GRPC_LIBRARY_TYPE SHARED)
+else(BUILD_SHARED_LIBS)
+  set(GRPC_LIBRARY_TYPE STATIC)
+endif(BUILD_SHARED_LIBS)
+
+find_program(GRPC_CPP_PLUGIN_EXECUTABLE NAMES grpc_cpp_plugin PATH ${CONAN_BIN_DIRS_GRPC})
+
+add_library(gRPC::address_sorting INTERFACE IMPORTED)
+target_include_directories(gRPC::address_sorting
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::address_sorting
+  INTERFACE "address_sorting"
+  INTERFACE "wsock32;ws2_32"
+)
+
+add_library(gRPC::gpr INTERFACE IMPORTED)
+target_include_directories(gRPC::gpr
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::gpr
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/gpr"
+)
+
+add_library(gRPC::grpc INTERFACE IMPORTED)
+target_include_directories(gRPC::grpc
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::grpc
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/grpc"
+  INTERFACE "OpenSSL::SSL;OpenSSL::Crypto;ZLIB::ZLIB;c-ares::cares;gRPC::address_sorting;gRPC::gpr"
+)
+
+add_library(gRPC::grpc_cronet INTERFACE IMPORTED)
+target_include_directories(gRPC::grpc_cronet
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::grpc_cronet
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/grpc_cronet"
+  INTERFACE "OpenSSL::SSL;OpenSSL::Crypto;ZLIB::ZLIB;c-ares::cares;gRPC::address_sorting;gRPC::gpr"
+)
+
+add_library(gRPC::grpc_unsecure INTERFACE IMPORTED)
+target_include_directories(gRPC::grpc_unsecure
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::grpc_unsecure
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/grpc_unsecure"
+  INTERFACE "ZLIB::ZLIB;c-ares::cares;gRPC::address_sorting;gRPC::gpr"
+)
+
+add_library(gRPC::grpc++ INTERFACE IMPORTED)
+target_include_directories(gRPC::grpc++
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::grpc++
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/grpc++"
+  INTERFACE "protobuf::libprotobuf;gRPC::grpc;gRPC::gpr"
+)
+
+add_library(gRPC::grpc++_cronet INTERFACE IMPORTED)
+target_include_directories(gRPC::grpc++_cronet
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::grpc++_cronet
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/grpc++_cronet"
+  INTERFACE "protobuf::libprotobuf;gRPC::gpr;gRPC::grpc_cronet;gRPC::grpc"
+)
+
+add_library(gRPC::grpc++_error_details INTERFACE IMPORTED)
+target_include_directories(gRPC::grpc++_error_details
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::grpc++_error_details
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/grpc++_error_details"
+  INTERFACE "gRPC::grpc++"
+)
+
+add_library(gRPC::grpc++_reflection INTERFACE IMPORTED)
+target_include_directories(gRPC::grpc++_reflection
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::grpc++_reflection
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/grpc++_reflection"
+  INTERFACE "gRPC::grpc++"
+)
+
+add_library(gRPC::grpc++_unsecure INTERFACE IMPORTED)
+target_include_directories(gRPC::grpc++_unsecure
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::grpc++_unsecure
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/grpc++_unsecure"
+  INTERFACE "protobuf::libprotobuf;gRPC::grpc_unsecure"
+)
+
+add_library(gRPC::grpc_plugin_support INTERFACE IMPORTED)
+target_include_directories(gRPC::grpc_plugin_support
+  INTERFACE ${CONAN_INCLUDE_DIRS_GRPC}
+)
+target_link_libraries(gRPC::grpc_plugin_support
+  INTERFACE "${CONAN_LIB_DIRS_GRPC}/grpc_plugin_support"
+  INTERFACE "protobuf::libprotoc"
+)
+
+message("** gRPC found by Conan!")
+message("   - includes: ${CONAN_INCLUDE_DIRS_GRPC}")
+message("   - grpc_cpp_plugin executable: ${GRPC_CPP_PLUGIN_EXECUTABLE}")
